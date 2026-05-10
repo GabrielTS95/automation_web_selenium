@@ -48,7 +48,9 @@ jobs:
         if: always()
         run: |
           mkdir -p target/Reporte_Allure
-          if [ -d target/site/allure-maven-plugin ]; then
+          if [ -d target/allure-report ]; then
+            cp -R target/allure-report/. target/Reporte_Allure/
+          elif [ -d target/site/allure-maven-plugin ]; then
             cp -R target/site/allure-maven-plugin/. target/Reporte_Allure/
           fi
 
