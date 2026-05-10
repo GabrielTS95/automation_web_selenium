@@ -21,6 +21,7 @@ jobs:
 
     env:
       HEADLESS: true
+      ALLURE_VERSION: 2.29.0
 
     steps:
       - name: Checkout repository
@@ -44,6 +45,13 @@ jobs:
         continue-on-error: true
         run: mvn allure:report -DskipTests
 
+      - name: Install Allure CLI
+        if: always()
+        run: |
+          curl -L -o allure.zip "https://github.com/allure-framework/allure2/releases/download/${ALLURE_VERSION}/allure-${ALLURE_VERSION}.zip"
+          unzip -q allure.zip -d "$RUNNER_TEMP/allure"
+          echo "$RUNNER_TEMP/allure/allure-${ALLURE_VERSION}/bin" >> "$GITHUB_PATH"
+
       - name: Prepare Allure HTML folder
         if: always()
         run: |
@@ -54,11 +62,24 @@ jobs:
             cp -R target/site/allure-maven-plugin/. target/Reporte_Allure/
           fi
 
-      - name: Upload Allure HTML report
+      - name: Generate single-file Allure report
+        if: always()
+        run: |
+          allure generate --single-file target/allure-results -o target/Reporte_Allure_Local --clean
+
+      - name: Upload Allure report for local opening
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Reporte_Allure
+          name: Reporte_Allure_Local
+          path: target/Reporte_Allure_Local
+          if-no-files-found: warn
+
+      - name: Upload Allure HTML report for web server
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Reporte_Allure_Web
           path: target/Reporte_Allure
           if-no-files-found: warn
 

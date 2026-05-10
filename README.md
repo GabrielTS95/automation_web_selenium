@@ -55,7 +55,8 @@ Ejemplos:
 
 Al terminar la ejecucion en GitHub, el workflow publica y sube el reporte Allure:
 
-- Artifact `Reporte_Allure`: descarga el ZIP, descomprimelo y abre `index.html`.
+- Artifact `Reporte_Allure_Local`: descarga el ZIP, descomprimelo y abre `index.html` directamente.
+- Artifact `Reporte_Allure_Web`: version completa para servidor web o GitHub Pages.
 - Artifact `automation-test-results`: contiene `surefire-reports` y `allure-results`.
 - GitHub Pages: abre el enlace publicado por el job `run-tests` para ver el reporte en el navegador.
 
