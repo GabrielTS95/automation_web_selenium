@@ -1,0 +1,9 @@
+target/
+allure-results/
+.allure/
+.idea/
+.vscode/
+*.iml
+*.log
+*.tmp
+.DS_Store
