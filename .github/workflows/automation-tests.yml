@@ -6,9 +6,18 @@ on:
     # 08:00 America/Lima. GitHub Actions usa horario UTC.
     - cron: "0 13 * * *"
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   run-tests:
     runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     env:
       HEADLESS: true
@@ -35,14 +44,43 @@ jobs:
         continue-on-error: true
         run: mvn allure:report -DskipTests
 
-      - name: Upload test artifacts
+      - name: Prepare Allure HTML folder
+        if: always()
+        run: |
+          mkdir -p target/Reporte_Allure
+          if [ -d target/site/allure-maven-plugin ]; then
+            cp -R target/site/allure-maven-plugin/. target/Reporte_Allure/
+          fi
+
+      - name: Upload Allure HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: automation-test-artifacts
+          name: Reporte_Allure
+          path: target/Reporte_Allure
+          if-no-files-found: warn
+
+      - name: Upload raw test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: automation-test-results
           path: |
             target/surefire-reports
             target/allure-results
-            target/Reporte_Allure
-            target/site/allure-maven-plugin
           if-no-files-found: ignore
+
+      - name: Setup GitHub Pages
+        if: always()
+        uses: actions/configure-pages@v5
+
+      - name: Upload GitHub Pages artifact
+        if: always()
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: target/Reporte_Allure
+
+      - name: Deploy Allure report to GitHub Pages
+        if: always()
+        id: deployment
+        uses: actions/deploy-pages@v4

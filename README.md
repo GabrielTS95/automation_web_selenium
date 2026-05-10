@@ -53,9 +53,14 @@ Ejemplos:
 
 ## Resultados
 
-Al terminar la ejecucion en GitHub, el workflow sube artefactos con:
+Al terminar la ejecucion en GitHub, el workflow publica y sube el reporte Allure:
 
-- `target/surefire-reports`
-- `target/allure-results`
-- `target/Reporte_Allure`, si Allure CLI esta disponible
-- `target/site/allure-maven-plugin`, si el reporte Allure de Maven se genera correctamente
+- Artifact `Reporte_Allure`: descarga el ZIP, descomprimelo y abre `index.html`.
+- Artifact `automation-test-results`: contiene `surefire-reports` y `allure-results`.
+- GitHub Pages: abre el enlace publicado por el job `run-tests` para ver el reporte en el navegador.
+
+Si GitHub Pages no publica en el primer intento, revisa en el repositorio:
+
+```text
+Settings > Pages > Build and deployment > Source > GitHub Actions
+```
