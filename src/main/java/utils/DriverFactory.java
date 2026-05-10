@@ -8,26 +8,34 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 public class DriverFactory {
 
-    private static WebDriver driver;
+    private static final ThreadLocal<WebDriver> DRIVER = new ThreadLocal<>();
+
+    private DriverFactory() {
+    }
 
     public static WebDriver getDriver() {
-        try {
-            closeDriver();
-            driver = new ChromeDriver(buildChromeOptions());
-        } catch (Exception e) {
-            throw new IllegalStateException("No se pudo iniciar ChromeDriver", e);
+        WebDriver driver = DRIVER.get();
+        if (driver == null) {
+            driver = createDriver();
+            DRIVER.set(driver);
         }
         return driver;
     }
 
+    public static WebDriver getCurrentDriver() {
+        return DRIVER.get();
+    }
+
     public static void closeDriver() {
+        WebDriver driver = DRIVER.get();
         if (driver != null) {
             driver.quit();
-            driver = null;
+            DRIVER.remove();
         }
     }
 
     public static byte[] takeScreenshot() {
+        WebDriver driver = getCurrentDriver();
         if (driver != null) {
             return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
         }
@@ -35,8 +43,16 @@ public class DriverFactory {
     }
 
     public static WebDriver initializeDriver() {
-        driver = new ChromeDriver(buildChromeOptions());
-        return driver;
+        closeDriver();
+        return getDriver();
+    }
+
+    private static WebDriver createDriver() {
+        String browser = ConfigReader.get("browser", "chrome").toLowerCase();
+        if ("chrome".equals(browser)) {
+            return new ChromeDriver(buildChromeOptions());
+        }
+        throw new IllegalArgumentException("Navegador no soportado: " + browser);
     }
 
     private static ChromeOptions buildChromeOptions() {
@@ -57,6 +73,6 @@ public class DriverFactory {
     private static boolean isHeadlessExecution() {
         return "true".equalsIgnoreCase(System.getenv("HEADLESS"))
                 || "true".equalsIgnoreCase(System.getenv("CI"))
-                || "true".equalsIgnoreCase(System.getProperty("headless"));
+                || ConfigReader.getBoolean("headless", false);
     }
 }

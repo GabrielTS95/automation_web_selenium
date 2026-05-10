@@ -2,41 +2,40 @@ package com.automation.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import utils.ConfigReader;
 
-public class LoginPage {
+public class LoginPage extends BasePage {
 
-    private WebDriver driver;
+    private final By username = By.id("user-name");
+    private final By password = By.id("password");
+    private final By loginBtn = By.id("login-button");
+    private final By errorMessage = By.cssSelector("[data-test='error']");
 
-    public LoginPage(WebDriver driver){
-        this.driver = driver;
+    public LoginPage(WebDriver driver) {
+        super(driver);
     }
 
-    private By username     = By.id("user-name");
-    private By password     = By.id("password");
-    private By loginBtn     = By.id("login-button");
-    private By errorMessage = By.cssSelector("[data-test='error']");
-
     public void navigateToLogin() {
-        driver.get("https://www.saucedemo.com/");
+        navigateTo(ConfigReader.get("base.url", "https://www.saucedemo.com/"));
     }
 
     public void enterUsername(String user) {
-        driver.findElement(username).sendKeys(user);
+        type(username, user);
     }
 
     public void enterPassword(String pass) {
-        driver.findElement(password).sendKeys(pass);
+        type(password, pass);
     }
 
     public void clickLogin() {
-        driver.findElement(loginBtn).submit();
-    }
-
-    public String validarLogin() {
-        return driver.findElement(By.className("app_logo")).getText();
+        click(loginBtn);
     }
 
     public String obtenerMensajeError() {
-        return driver.findElement(errorMessage).getText();
+        return getText(errorMessage);
+    }
+
+    public boolean estaEnPaginaLogin() {
+        return isVisible(loginBtn);
     }
 }

@@ -35,6 +35,14 @@ Se puede ejecutar de dos formas:
 - Manualmente desde GitHub: `Actions > Web Automation Tests > Run workflow`.
 - Automaticamente cada lunes a las 07:00 hora Peru.
 
+En ejecucion manual puedes enviar tags de Cucumber, por ejemplo:
+
+```text
+@CP001
+@LoginExitoso
+@LoginInvalido
+```
+
 GitHub Actions usa UTC. Para cambiar el horario, edita esta linea:
 
 ```yaml
@@ -73,6 +81,36 @@ Secreto opcional:
 - `SMTP_FROM`: remitente visible. Si no existe, se usa `SMTP_USERNAME`.
 
 Para Gmail, usa una app password, no la clave normal de tu cuenta.
+
+## Configuracion
+
+La configuracion principal esta en:
+
+```text
+src/test/resources/config.properties
+```
+
+Valores actuales:
+
+```properties
+base.url=https://www.saucedemo.com/
+browser=chrome
+headless=false
+timeout=10
+```
+
+Tambien puedes sobrescribir valores por variables de entorno o propiedades Maven:
+
+```bash
+mvn test -Dbase.url=https://www.saucedemo.com/ -Dheadless=true
+mvn test -Dcucumber.filter.tags="@CP001"
+```
+
+En PowerShell usa comillas alrededor de las propiedades con punto:
+
+```powershell
+mvn test "-Dcucumber.filter.tags=@CP001"
+```
 
 ## Resultados
 

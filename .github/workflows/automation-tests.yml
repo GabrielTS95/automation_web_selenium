@@ -2,6 +2,11 @@ name: Web Automation Tests
 
 on:
   workflow_dispatch:
+    inputs:
+      cucumber_tags:
+        description: "Tags de Cucumber a ejecutar. Ejemplo: @CP001 o @LoginExitoso"
+        required: false
+        default: ""
   schedule:
     # Lunes 07:00 America/Lima. GitHub Actions usa horario UTC.
     - cron: "0 12 * * 1"
@@ -22,6 +27,7 @@ jobs:
     env:
       HEADLESS: true
       ALLURE_VERSION: 2.29.0
+      CUCUMBER_TAGS: ${{ github.event.inputs.cucumber_tags || '' }}
 
     steps:
       - name: Checkout repository
@@ -38,7 +44,12 @@ jobs:
         uses: browser-actions/setup-chrome@v1
 
       - name: Run automation
-        run: mvn clean test
+        run: |
+          if [ -n "$CUCUMBER_TAGS" ]; then
+            mvn clean test -Dcucumber.filter.tags="$CUCUMBER_TAGS"
+          else
+            mvn clean test
+          fi
 
       - name: Generate Allure report
         if: always()
@@ -121,6 +132,7 @@ jobs:
 
       - name: Send email notification
         if: always()
+        continue-on-error: true
         env:
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
@@ -146,7 +158,8 @@ jobs:
           required = ["SMTP_HOST", "SMTP_PORT", "SMTP_USERNAME", "SMTP_PASSWORD"]
           missing = [name for name in required if not os.getenv(name)]
           if missing:
-              raise SystemExit(f"Missing required email secrets: {', '.join(missing)}")
+              print(f"Email notification skipped. Missing secrets: {', '.join(missing)}")
+              raise SystemExit(0)
 
           status = os.getenv("RUN_STATUS", "unknown")
           repository = os.getenv("REPOSITORY", "")

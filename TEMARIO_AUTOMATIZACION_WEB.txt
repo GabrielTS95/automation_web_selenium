@@ -1,0 +1,284 @@
+TEMARIO: AUTOMATIZACION WEB CON SELENIUM, CUCUMBER, ALLURE Y GITHUB ACTIONS
+
+Ing. Erwin Gabriel Torres Sangama
+Quality Engineer del Banco de Crédito del Perú
+Más de 4 años de experiencia en el aseguramiento de la calidad.
+
+Objetivo general:
+Construir, ejecutar y mantener un framework de automatizacion web en Java,
+integrando pruebas BDD, reportes Allure, ejecucion programada en GitHub Actions,
+publicacion de reportes y notificaciones por correo.
+
+
+MODULO 1: FUNDAMENTOS DE AUTOMATIZACION
+
+1. Que es automatizacion de pruebas
+2. Diferencia entre pruebas manuales y automatizadas
+3. Que pruebas conviene automatizar
+4. Arquitectura basica de un framework web
+5. Flujo general:
+   Feature -> Steps -> Page Object -> WebDriver -> Reporte -> CI/CD
+6. Herramientas usadas:
+   Java, Maven, Selenium, Cucumber, JUnit, Allure, GitHub Actions
+
+
+MODULO 2: PREPARACION DEL ENTORNO
+
+1. Instalacion de Java JDK 17
+2. Instalacion y configuracion de IntelliJ IDEA
+3. Instalacion de Maven
+4. Configuracion de variables de entorno
+5. Estructura basica de un proyecto Maven
+6. Archivo pom.xml
+7. Dependencias principales del framework
+
+
+MODULO 3: SELENIUM WEBDRIVER
+
+1. Que es Selenium WebDriver
+2. Como abrir Chrome desde Java
+3. Localizadores:
+   id, className, cssSelector, xpath
+4. Acciones basicas:
+   click, sendKeys, submit, getText
+5. Manejo de errores comunes:
+   NoSuchElementException, timeouts, elementos no visibles
+6. Ejecucion normal vs headless
+7. Configuracion de ChromeOptions
+
+
+MODULO 4: PAGE OBJECT MODEL
+
+1. Que es Page Object Model
+2. Separacion entre logica de prueba y logica de pagina
+3. Creacion de clases Page:
+   LoginPage
+4. Buenas practicas de localizadores
+5. Metodos reutilizables:
+   enterUsername, enterPassword, clickLogin, validarLogin
+6. Ventajas de mantenibilidad
+
+
+MODULO 5: CUCUMBER Y BDD
+
+1. Que es BDD
+2. Lenguaje Gherkin
+3. Estructura de un archivo .feature
+4. Uso de:
+   Feature, Scenario, Given, When, And, Then
+5. Tags:
+   @CP001, @CP002, @Escenario001_PaginaLogin
+6. Step Definitions en Java
+7. Parametrizacion con {string}
+8. Validaciones con Assert
+
+
+MODULO 6: HOOKS Y CICLO DE VIDA
+
+1. Que son los hooks en Cucumber
+2. Uso de @Before, @After, @AfterStep
+3. Cierre del navegador despues de cada escenario
+4. Captura de screenshots
+5. Adjuntar evidencias al reporte
+6. Manejo de errores durante screenshots
+
+
+MODULO 7: REPORTES CON ALLURE
+
+1. Que es Allure Report
+2. Configuracion de Allure con Cucumber
+3. Carpeta allure-results
+4. Generacion del reporte HTML
+5. Diferencia entre:
+   allure-results, allure-report, Reporte_Allure
+6. Reporte multiarchivo vs single-file
+7. Por que index.html puede fallar si se abre con file:///
+8. Generacion de reporte local abrible directamente
+
+
+MODULO 8: GIT Y GITHUB
+
+1. Que es Git
+2. Inicializar repositorio
+3. Archivo .gitignore
+4. Commits
+5. Branch principal main
+6. Configuracion de remote
+7. Push a GitHub
+8. Buenas practicas para no subir:
+   target, .idea, .vscode, .allure
+
+
+MODULO 9: GITHUB ACTIONS
+
+1. Que es CI/CD
+2. Que es GitHub Actions
+3. Estructura de un workflow .yml
+4. Evento manual:
+   workflow_dispatch
+5. Evento programado:
+   schedule
+6. Jobs y steps
+7. Runner ubuntu-latest
+8. Instalacion de Java en Actions
+9. Instalacion de Chrome
+10. Ejecucion de Maven:
+    mvn clean test
+
+
+MODULO 10: EJECUCION PROGRAMADA
+
+1. Que es cron
+2. Como GitHub Actions usa horario UTC
+3. Conversion horario Lima, Peru a UTC
+4. Ejemplo:
+   lunes 7:00 AM Lima = 0 12 * * 1
+5. Ejecucion diaria, semanal y mensual
+6. Buenas practicas para horarios programados
+
+
+MODULO 11: ARTIFACTS Y REPORTES EN GITHUB ACTIONS
+
+1. Que son artifacts
+2. Subida de reportes con actions/upload-artifact
+3. Artifact para abrir localmente:
+   Reporte_Allure_Local
+4. Artifact para web:
+   Reporte_Allure_Web
+5. Artifact tecnico:
+   automation-test-results
+6. Descarga y apertura del reporte
+7. Retencion de artifacts
+
+
+MODULO 12: GITHUB PAGES
+
+1. Que es GitHub Pages
+2. Publicacion automatica del reporte Allure
+3. Configuracion:
+   Settings > Pages > Source > GitHub Actions
+4. Uso de:
+   configure-pages, upload-pages-artifact, deploy-pages
+5. Visualizacion del reporte en navegador
+6. Diferencia entre artifact y GitHub Pages
+
+
+MODULO 13: NOTIFICACIONES POR CORREO
+
+1. Objetivo de las notificaciones
+2. Envio en success y fail
+3. SMTP basico
+4. Configuracion con Gmail:
+   smtp.gmail.com
+   puerto 587
+5. App Password de Gmail
+6. GitHub Secrets:
+   SMTP_HOST
+   SMTP_PORT
+   SMTP_USERNAME
+   SMTP_PASSWORD
+   SMTP_FROM
+7. Envio de adjuntos:
+   Reporte_Allure_Local.zip
+   surefire-reports.zip
+8. Buenas practicas de seguridad
+
+
+MODULO 14: MANEJO DE FALLOS Y TROUBLESHOOTING
+
+1. Fallos de Selenium
+2. Fallos de localizadores
+3. Fallos de Cucumber steps
+4. Fallos al generar Allure
+5. Fallos al abrir index.html
+6. Fallos de GitHub Pages
+7. Fallos de SMTP
+8. Lectura de logs en GitHub Actions
+9. Interpretacion de warnings
+
+
+MODULO 15: BUENAS PRACTICAS DE FRAMEWORK
+
+1. Separacion de responsabilidades
+2. Page Object limpio
+3. Nombres claros en features y steps
+4. Reutilizacion de metodos
+5. Evitar sleeps innecesarios
+6. Uso de waits explicitos
+7. Manejo de datos de prueba
+8. Configuracion por variables de entorno
+9. No exponer credenciales
+10. Reportes claros y trazables
+
+
+MODULO 16: TEMAS AVANZADOS
+
+1. Ejecucion por tags
+2. Ejecucion por ambientes:
+   QA, UAT, PROD
+3. Uso de archivos .properties
+4. Paralelizacion de pruebas
+5. Selenium Grid
+6. Docker para ejecucion aislada
+7. Manejo de multiples navegadores
+8. Integracion con Slack, Teams o Telegram
+9. Metricas historicas de ejecucion
+10. Estrategia de mantenimiento del framework
+
+
+PROYECTO FINAL
+
+Construir desde cero una automatizacion que incluya:
+
+1. Login exitoso
+2. Login fallido
+3. Feature en Gherkin
+4. Steps en Java
+5. Page Object
+6. Screenshots por step
+7. Reporte Allure
+8. Ejecucion local
+9. Ejecucion headless
+10. Workflow en GitHub Actions
+11. Ejecucion programada semanal
+12. Publicacion en GitHub Pages
+13. Envio de correo con reporte adjunto
+
+
+
+DISTRIBUCIÓN
+
+Sesion 1:
+Fundamentos de automatizacion, herramientas y preparacion del entorno.
+
+Sesion 2:
+Selenium WebDriver, ChromeDriver, localizadores y acciones basicas.
+
+Sesion 3:
+Page Object Model y separacion de responsabilidades.
+
+Sesion 4:
+Cucumber, Gherkin, steps y validaciones.
+
+Sesion 5:
+Hooks, screenshots y reportes Allure.
+
+Sesion 6:
+Git, GitHub, estructura del repositorio y buenas practicas.
+
+Sesion 7:
+GitHub Actions, ejecucion manual, ejecucion programada y artifacts.
+
+Sesion 8:
+GitHub Pages, notificaciones por correo, troubleshooting y proyecto final.
+
+DURACIÓN 32 horas.
+
+Basico:
+8 horas
+
+Intermedio:
+12 horas
+
+Avanzado:
+12 horas

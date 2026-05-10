@@ -1,8 +1,10 @@
 package com.automation.runner;
+
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.AfterClass;
 import org.junit.runner.RunWith;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,19 +13,15 @@ import java.util.logging.Logger;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-    features = "src/test/resources/features", //Rutas de las caracteristicas
-    glue = {"com.automation.steps","com.automation.hooks"}, //definiciones de steps y hooks
+    features = "src/test/resources/features",
+    glue = {"com.automation.steps", "com.automation.hooks"},
     plugin = {"pretty", "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"},
-    tags = "@Escenario001_PaginaLogin",
     monochrome = true
 )
 public class TestRunner {
 
-    /*La función genera un reporte de pruebas automatizadas usando Allure,
-    una herramienta de reportes muy usada en testing automatizado.*/
-
     @AfterClass
-    public static void generarInformeDeAllure(){
+    public static void generarInformeDeAllure() {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder();
             String os = System.getProperty("os.name").toLowerCase();
@@ -50,8 +48,8 @@ public class TestRunner {
             }
 
         } catch (IOException | InterruptedException e) {
+            Thread.currentThread().interrupt();
             Logger.getLogger(TestRunner.class.getName()).log(Level.SEVERE, "Error en el comando Allure", e);
         }
     }
-
 }
