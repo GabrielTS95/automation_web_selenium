@@ -3,8 +3,8 @@ name: Web Automation Tests
 on:
   workflow_dispatch:
   schedule:
-    # 08:00 America/Lima. GitHub Actions usa horario UTC.
-    - cron: "0 13 * * *"
+    # Lunes 07:00 America/Lima. GitHub Actions usa horario UTC.
+    - cron: "0 12 * * 1"
 
 permissions:
   contents: read
@@ -107,3 +107,97 @@ jobs:
         if: always()
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Package reports for email
+        if: always()
+        run: |
+          mkdir -p target/email-artifacts
+          if [ -d target/Reporte_Allure_Local ]; then
+            (cd target/Reporte_Allure_Local && zip -qr ../email-artifacts/Reporte_Allure_Local.zip .)
+          fi
+          if [ -d target/surefire-reports ]; then
+            (cd target && zip -qr email-artifacts/surefire-reports.zip surefire-reports)
+          fi
+
+      - name: Send email notification
+        if: always()
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_FROM: ${{ secrets.SMTP_FROM }}
+          MAIL_TO: ergatosa.95@gmail.com
+          RUN_STATUS: ${{ job.status }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          PAGES_URL: ${{ steps.deployment.outputs.page_url }}
+          REPOSITORY: ${{ github.repository }}
+          WORKFLOW_NAME: ${{ github.workflow }}
+          RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          python - <<'PY'
+          import mimetypes
+          import os
+          import smtplib
+          import ssl
+          from email.message import EmailMessage
+          from pathlib import Path
+
+          required = ["SMTP_HOST", "SMTP_PORT", "SMTP_USERNAME", "SMTP_PASSWORD"]
+          missing = [name for name in required if not os.getenv(name)]
+          if missing:
+              raise SystemExit(f"Missing required email secrets: {', '.join(missing)}")
+
+          status = os.getenv("RUN_STATUS", "unknown")
+          repository = os.getenv("REPOSITORY", "")
+          workflow = os.getenv("WORKFLOW_NAME", "")
+          run_number = os.getenv("RUN_NUMBER", "")
+          run_url = os.getenv("RUN_URL", "")
+          pages_url = os.getenv("PAGES_URL", "")
+          sender = os.getenv("SMTP_FROM") or os.getenv("SMTP_USERNAME")
+          recipient = os.getenv("MAIL_TO")
+
+          msg = EmailMessage()
+          msg["From"] = sender
+          msg["To"] = recipient
+          msg["Subject"] = f"[{status.upper()}] {workflow} #{run_number} - {repository}"
+          msg.set_content(
+              "\n".join([
+                  f"Workflow: {workflow}",
+                  f"Repositorio: {repository}",
+                  f"Ejecucion: #{run_number}",
+                  f"Estado: {status}",
+                  f"Detalle en GitHub Actions: {run_url}",
+                  f"Reporte GitHub Pages: {pages_url or 'No disponible'}",
+                  "",
+                  "Se adjuntan los reportes disponibles.",
+              ])
+          )
+
+          for path in Path("target/email-artifacts").glob("*.zip"):
+              ctype, encoding = mimetypes.guess_type(path)
+              if ctype is None or encoding is not None:
+                  ctype = "application/zip"
+              maintype, subtype = ctype.split("/", 1)
+              msg.add_attachment(
+                  path.read_bytes(),
+                  maintype=maintype,
+                  subtype=subtype,
+                  filename=path.name,
+              )
+
+          host = os.environ["SMTP_HOST"]
+          port = int(os.environ["SMTP_PORT"])
+          username = os.environ["SMTP_USERNAME"]
+          password = os.environ["SMTP_PASSWORD"]
+
+          if port == 465:
+              with smtplib.SMTP_SSL(host, port, context=ssl.create_default_context()) as smtp:
+                  smtp.login(username, password)
+                  smtp.send_message(msg)
+          else:
+              with smtplib.SMTP(host, port) as smtp:
+                  smtp.starttls(context=ssl.create_default_context())
+                  smtp.login(username, password)
+                  smtp.send_message(msg)
+          PY

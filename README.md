@@ -33,12 +33,12 @@ El workflow esta en:
 Se puede ejecutar de dos formas:
 
 - Manualmente desde GitHub: `Actions > Web Automation Tests > Run workflow`.
-- Automaticamente todos los dias a las 08:00 hora Peru.
+- Automaticamente cada lunes a las 07:00 hora Peru.
 
 GitHub Actions usa UTC. Para cambiar el horario, edita esta linea:
 
 ```yaml
-- cron: "0 13 * * *"
+- cron: "0 12 * * 1"
 ```
 
 Ejemplos:
@@ -50,6 +50,29 @@ Ejemplos:
 # Lunes a viernes a las 08:00 hora Peru
 - cron: "0 13 * * 1-5"
 ```
+
+## Notificacion por correo
+
+El workflow envia un correo a `ergatosa.95@gmail.com` al finalizar cada ejecucion, tanto si pasa como si falla.
+
+Configura estos secretos en GitHub:
+
+```text
+Settings > Secrets and variables > Actions > New repository secret
+```
+
+Secretos requeridos:
+
+- `SMTP_HOST`: servidor SMTP. Para Gmail: `smtp.gmail.com`.
+- `SMTP_PORT`: puerto SMTP. Para Gmail: `587`.
+- `SMTP_USERNAME`: correo remitente.
+- `SMTP_PASSWORD`: clave SMTP o app password.
+
+Secreto opcional:
+
+- `SMTP_FROM`: remitente visible. Si no existe, se usa `SMTP_USERNAME`.
+
+Para Gmail, usa una app password, no la clave normal de tu cuenta.
 
 ## Resultados
 
