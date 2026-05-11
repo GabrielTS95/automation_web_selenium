@@ -18,11 +18,11 @@ public class InventoryPage extends BasePage {
     }
 
     public void abrirMenuLateral() {
-        click(menuButton);
-        waitUntilVisible(logoutLink);
+        clickWithJavaScript(menuButton);
+        waitUntilPresent(logoutLink);
     }
 
     public void cerrarSesion() {
-        clickWithJavaScript(logoutLink);
+        clickPresentElementWithJavaScript(logoutLink);
     }
 }

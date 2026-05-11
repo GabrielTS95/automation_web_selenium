@@ -34,6 +34,11 @@ public abstract class BasePage {
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
     }
 
+    protected void clickPresentElementWithJavaScript(By locator) {
+        WebElement element = waitUntilPresent(locator);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+    }
+
     protected void type(By locator, String text) {
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
         element.clear();
@@ -50,6 +55,10 @@ public abstract class BasePage {
 
     protected WebElement waitUntilVisible(By locator) {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    protected WebElement waitUntilPresent(By locator) {
+        return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
     protected WebElement waitUntilClickable(By locator) {
