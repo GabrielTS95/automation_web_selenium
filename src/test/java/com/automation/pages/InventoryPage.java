@@ -19,9 +19,10 @@ public class InventoryPage extends BasePage {
 
     public void abrirMenuLateral() {
         click(menuButton);
+        waitUntilVisible(logoutLink);
     }
 
     public void cerrarSesion() {
-        click(logoutLink);
+        clickWithJavaScript(logoutLink);
     }
 }

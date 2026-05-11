@@ -1,6 +1,7 @@
 package com.automation.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -24,7 +25,13 @@ public abstract class BasePage {
     }
 
     protected void click(By locator) {
-        wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
+        waitUntilClickable(locator).click();
+    }
+
+    protected void clickWithJavaScript(By locator) {
+        WebElement element = waitUntilVisible(locator);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
     }
 
     protected void type(By locator, String text) {
@@ -34,10 +41,18 @@ public abstract class BasePage {
     }
 
     protected String getText(By locator) {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).getText();
+        return waitUntilVisible(locator).getText();
     }
 
     protected boolean isVisible(By locator) {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).isDisplayed();
+        return waitUntilVisible(locator).isDisplayed();
+    }
+
+    protected WebElement waitUntilVisible(By locator) {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    protected WebElement waitUntilClickable(By locator) {
+        return wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
 }
