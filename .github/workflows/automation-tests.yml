@@ -8,8 +8,9 @@ on:
         required: false
         default: ""
   schedule:
-    # Lunes 07:00 America/Lima. GitHub Actions usa horario UTC.
-    - cron: "0 12 * * 1"
+    # Lunes 08:15 America/Lima.
+    - cron: "15 8 * * 1"
+      timezone: "America/Lima"
 
 permissions:
   contents: read
@@ -144,7 +145,7 @@ jobs:
           RUN_STATUS: ${{ job.status }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           PAGES_URL: ${{ steps.deployment.outputs.page_url }}
-          REPOSITORY: ${{ github.repository }}f
+          REPOSITORY: ${{ github.repository }}
           WORKFLOW_NAME: ${{ github.workflow }}
           RUN_NUMBER: ${{ github.run_number }}
         run: |

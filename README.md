@@ -47,7 +47,7 @@ El workflow esta en:
 Se puede ejecutar de dos formas:
 
 - Manualmente desde GitHub: `Actions > Web Automation Tests > Run workflow`.
-- Automaticamente cada lunes a las 07:00 hora Peru.
+- Automaticamente cada lunes a las 08:15 hora Peru.
 
 En ejecucion manual puedes enviar tags de Cucumber, por ejemplo:
 
@@ -57,10 +57,11 @@ En ejecucion manual puedes enviar tags de Cucumber, por ejemplo:
 @LoginInvalido
 ```
 
-GitHub Actions usa UTC. Para cambiar el horario, edita esta linea:
+El horario programado usa la zona horaria `America/Lima`. Para cambiarlo, edita estas lineas:
 
 ```yaml
-- cron: "0 12 * * 1"
+- cron: "15 8 * * 1"
+  timezone: "America/Lima"
 ```
 
 Ejemplos:
@@ -68,9 +69,11 @@ Ejemplos:
 ```yaml
 # Cada hora
 - cron: "0 * * * *"
+  timezone: "America/Lima"
 
 # Lunes a viernes a las 08:00 hora Peru
-- cron: "0 13 * * 1-5"
+- cron: "0 8 * * 1-5"
+  timezone: "America/Lima"
 ```
 
 ## Notificacion por correo
