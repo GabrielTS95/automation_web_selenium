@@ -8,9 +8,6 @@ on:
         required: false
         default: ""
   schedule:
-    # Ejecucion temporal: lunes 11/05/2026 08:45 America/Lima.
-    - cron: "45 8 11 5 *"
-      timezone: "America/Lima"
     # Lunes 08:15 America/Lima.
     - cron: "15 8 * * 1"
       timezone: "America/Lima"
