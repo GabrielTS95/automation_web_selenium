@@ -16,10 +16,24 @@ En Windows tambien puedes ejecutar:
 scripts\run-automation.bat
 ```
 
+Ese script ejecuta las pruebas y genera el reporte local de Allure.
+
 Para ejecutar sin abrir navegador visible:
 
 ```bat
 scripts\run-automation-headless.bat
+```
+
+Reporte local recomendado:
+
+```text
+target\Reporte_Allure_Local\index.html
+```
+
+Si Allure CLI no esta instalado, el script genera el reporte alternativo de Maven en:
+
+```text
+target\allure-report\index.html
 ```
 
 ## Ejecutar en GitHub Actions

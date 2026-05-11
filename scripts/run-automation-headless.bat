@@ -1,8 +1,7 @@
 @echo off
 setlocal
 
-cd /d "%~dp0.."
 set HEADLESS=true
-mvn clean test
+call "%~dp0run-automation-with-report.bat"
 
 endlocal
