@@ -141,7 +141,7 @@ jobs:
           SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
           SMTP_FROM: ${{ secrets.SMTP_FROM }}
-          MAIL_TO: ergatosa.95@gmail.com,jaqruinigoc@gmail.com
+          MAIL_TO: ergatosa.95@gmail.com,jarquinigoc@gmail.com
           RUN_STATUS: ${{ job.status }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           PAGES_URL: ${{ steps.deployment.outputs.page_url }}
